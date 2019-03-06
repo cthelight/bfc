@@ -45,7 +45,6 @@ int main(int argc, char *argv[]){
         strcpy(mfname, fname);
         strcat(mfname,".c");
         
-        printf("%s\n", fname);
 	FILE *fd = fopen(fname,"r");
 	FILE *of = fopen(mfname,"w");
 	char c;
@@ -53,7 +52,6 @@ int main(int argc, char *argv[]){
         fputs(mem_size, of);
         fputs("];\nint main(){\nchar *cur = arr;\n", of);
 	while((c = fgetc(fd)) != EOF){
-		putchar(c);
 		switch(c){
 			case '-':
 				fputs(SUB,of);
