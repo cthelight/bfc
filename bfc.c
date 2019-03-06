@@ -21,7 +21,9 @@ int main(int argc, char *argv[]){
         char * mem_size = "1000";
 
         char rm_mid_file = 1;
-        while((val = getopt(argc, argv, "o:m:k")) != -1){
+        char do_not_build = 0;
+
+        while((val = getopt(argc, argv, "o:m:kD")) != -1){
                 switch(val){
                         case 'o':
                             ofname = optarg; 
@@ -31,6 +33,9 @@ int main(int argc, char *argv[]){
                             break;
                         case 'k':
                             rm_mid_file = 0;
+                            break;
+                        case 'D':
+                            do_not_build = 1;
                             break;
                 }
 
@@ -82,15 +87,17 @@ int main(int argc, char *argv[]){
 	fputc('}', of);
 	fclose(fd);
 	fclose(of);
-        int len = strlen(mfname) + strlen(ofname) + 9;
-        char * comp = malloc(len * sizeof(char));
-        strcpy(comp, "gcc ");
-        strcat(comp, mfname);
-        strcat(comp, " -o ");
-        strcat(comp, ofname);
+        if(!do_not_build){
+            int len = strlen(mfname) + strlen(ofname) + 9;
+            char * comp = malloc(len * sizeof(char));
+            strcpy(comp, "gcc ");
+            strcat(comp, mfname);
+            strcat(comp, " -o ");
+            strcat(comp, ofname);
 
-	system(comp);
-        free(comp);
+	    system(comp);
+            free(comp);
+        }
         
         if(rm_mid_file){
             char * torm = malloc((strlen(mfname) + 4) * sizeof(char));
