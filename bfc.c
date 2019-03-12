@@ -15,13 +15,15 @@
 
 int main(int argc, char *argv[]){
         int val;
+        int bracket_cnt = 0;
         char * fname = "";
         char * ofname = "a.out";
         char * mfname = "bf.bftoc";
-        char * mem_size = "1000";
+        char * mem_size = "30000";
 
         char rm_mid_file = 1;
         char do_not_build = 0;
+        char invalid_syntax = 0;
 
         while((val = getopt(argc, argv, "o:m:kD")) != -1){
                 switch(val){
@@ -66,9 +68,14 @@ int main(int argc, char *argv[]){
 				break;
 			case '[':
 				fputs(LBR, of);
+                                bracket_cnt++;
 				break;
 			case ']':
 				fputs(RBR, of);
+                                bracket_cnt--;
+                                if(bracket_cnt < 0){
+                                    invalid_syntax = 1;
+                                }
 				break;
 			case '<':
 				fputs(LFT, of);
@@ -82,11 +89,20 @@ int main(int argc, char *argv[]){
 			case '.':
 				fputs(OUT, of);
 				break;
+                        case '#':
+                                while((c = fgetc(fd)) != EOF && c != '\n');
+                                break;
 		}
 	}
 	fputc('}', of);
 	fclose(fd);
 	fclose(of);
+        if(bracket_cnt != 0 || invalid_syntax){
+            do_not_build = 1;
+            rm_mid_file = 1;
+            printf("Invalid Syntax\n");
+        }
+
         if(!do_not_build){
             int len = strlen(mfname) + strlen(ofname) + 9;
             char * comp = malloc(len * sizeof(char));
