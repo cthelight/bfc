@@ -12,6 +12,8 @@
 #define RBR "}\n"
 #define OUT "putchar(*cur);\n"
 #define INP "*cur = getchar();\n"
+#define MEM_TEST_FIRST "if(cur < arr || cur >= arr + "
+#define MEM_TEST_LAST "){\nprintf(\"Memory read error!\\n\");\n}"
 
 int main(int argc, char *argv[]){
         int val;
@@ -24,8 +26,9 @@ int main(int argc, char *argv[]){
         char rm_mid_file = 1;
         char do_not_build = 0;
         char invalid_syntax = 0;
+        char debug_mem = 0;
 
-        while((val = getopt(argc, argv, "o:m:kD")) != -1){
+        while((val = getopt(argc, argv, "o:m:kDd")) != -1){
                 switch(val){
                         case 'o':
                             ofname = optarg; 
@@ -38,6 +41,9 @@ int main(int argc, char *argv[]){
                             break;
                         case 'D':
                             do_not_build = 1;
+                            break;
+                        case 'd':
+                            debug_mem = 1;
                             break;
                 }
 
@@ -79,9 +85,19 @@ int main(int argc, char *argv[]){
 				break;
 			case '<':
 				fputs(LFT, of);
+                                if(debug_mem){
+                                    fputs(MEM_TEST_FIRST, of);
+                                    fputs(mem_size, of);
+                                    fputs(MEM_TEST_LAST, of);
+                                }
 				break;
 			case '>':
 				fputs(RHT, of);
+                                if(debug_mem){
+                                    fputs(MEM_TEST_FIRST,of);
+                                    fputs(mem_size, of);
+                                    fputs(MEM_TEST_LAST, of);
+                                }
 				break;
 			case ',':
 				fputs(INP, of);
