@@ -8,3 +8,4 @@ Simply use the provided Make file to compile to binary.
 -k Keeps the intermediate C source code\
 -m [number] Sets the size of the BrainFuck memory to [number] of cells\
 -D Do not compile to binary, just transcode to C (C file will only be kept if used with -k option)\
+-d Add simple debug messages for reading invalid memory\
